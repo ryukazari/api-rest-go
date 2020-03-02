@@ -9,6 +9,7 @@ import (
 	"strconv" //para convertir Integer -> String 
 	_ "github.com/lib/pq"
 	"api-rest-v1/models"
+	"os"
 )
 
 
@@ -155,5 +156,15 @@ func main(){
 	router.HandleFunc("/post/{id}", EditPostEndpoint).Methods("PUT")
 	router.HandleFunc("/post/{id}", DeletePostEndpoint).Methods("DELETE")
 
-	log.Fatal(http.ListenAndServe(":3000", router))
+	log.Fatal(http.ListenAndServe(GetPort(), router))
+}
+
+func GetPort() string {
+	var port = os.Getenv("PORT")
+	// Set a default port if there is nothing in the environment
+	if port == "" {
+		port = "300"
+		fmt.Println("INFO: No se detectó un puerto como variable de entorno, Puerto por defecto: " + port)
+	}
+	return ":" + port
 }
